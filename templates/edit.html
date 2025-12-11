@@ -34,6 +34,21 @@
       </select>
     </label>
 
+    <!-- CONDITION -->
+<label>
+  Condition
+  <select name="condition" required>
+    <option value="new"  {% if item.condition == "new" %}selected{% endif %}>New</option>
+    <option value="good" {% if item.condition == "good" %}selected{% endif %}>Good</option>
+    <option value="fair" {% if item.condition == "fair" %}selected{% endif %}>Fair</option>
+    <option value="poor" {% if item.condition == "poor" %}selected{% endif %}>Poor</option>
+  </select>
+</label>
+
+
+  
+
+    
     <!-- PRICE -->
     <label>
       Price
