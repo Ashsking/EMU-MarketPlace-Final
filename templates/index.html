@@ -88,12 +88,13 @@
 
           {% if current_user %}
             {% if current_user.id != item.seller_id %}
-              <a href="{{ url_for('make_offer', listing_id=item.id) }}" class="contrast">Make Offer</a>
+              
+              <a href="{{ url_for('buy_student', listing_id=item.id) }}" class="contrast">Buy Now</a>
             {% else %}
               <small><em>This is your listing</em></small>
             {% endif %}
           {% else %}
-            <p><small><a href="{{ url_for('login') }}">Login to make offers</a></small></p>
+            <p><small><a href="{{ url_for('login') }}">Login to buy</a></small></p>
           {% endif %}
         </div>
 
