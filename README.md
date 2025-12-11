@@ -1,11 +1,11 @@
-# 📦 EMU Student Marketplace – Final Project
+#  EMU Student Marketplace – Final Project
 
 A full-stack Flask web application designed for the Eastern Mennonite University (EMU) community.  
 This platform enables student-to-student selling, official EMU store purchasing, secure account management, and personalized dashboards — all built using Python, Flask, SQLAlchemy, and HTML/CSS.
 
 ---
 
-## 🚀 Overview
+##  Overview
 
 The EMU Student Marketplace is a centralized platform where EMU students can buy, sell, and browse items in a safe, EMU-exclusive environment. The platform supports two main item categories:
 
@@ -16,32 +16,32 @@ The application includes authentication, image upload support, item posting/edit
 
 ---
 
-## 🛠️ Features
+##  Features
 
-### 🔐 User Authentication
+###  User Authentication
 - Signup and login (EMU email required)  
 - Secure password hashing  
 - Session-based login state  
 
-### 🛒 Student Marketplace
+###  Student Marketplace
 - Create, edit, and delete personal listings  
 - Upload images or use external URLs  
 - Category filters + full search  
 - Buy student listings with automatic transaction recording  
 
-### 🏫 Official EMU Store
+###  Official EMU Store
 - Admin-created store merchandise  
 - Stock tracking  
 - Buy Now checkout with quantity selection  
 - Auto-generated order records  
 
-### 📊 Dashboard
+###  Dashboard
 - Active listings  
 - Purchases  
 - Sales  
 - EMU store orders  
 
-### 📄 Static Pages
+###  Static Pages
 - About  
 - FAQ  
 - Terms  
@@ -49,7 +49,7 @@ The application includes authentication, image upload support, item posting/edit
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 EMU-MarketPlace-Final/
 │
@@ -79,7 +79,7 @@ EMU-MarketPlace-Final/
 
 ---
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 **Backend:** Python, Flask, SQLAlchemy, SQLite  
 **Frontend:** HTML, CSS, Jinja2 Templates  
@@ -87,7 +87,7 @@ EMU-MarketPlace-Final/
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 ### 1. Clone Repo
 ```bash
@@ -101,7 +101,8 @@ pip install -r requirements.txt
 4. Run the App
 flask run
 Then open: http://127.0.0.1:5000/
-📌 Future Improvements
+
+ Future Improvements
 Real-time chat
 Notifications system
 More advanced search filters
@@ -109,6 +110,7 @@ Multi-image support
 Full admin dashboard
 Rating and review system
 Payment processing (Stripe/PayPal)
-👨‍💻 Developer
+
+ Developer
 Ashutosh Niraula
 Eastern Mennonite University — Computer Science
