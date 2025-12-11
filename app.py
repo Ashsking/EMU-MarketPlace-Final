@@ -343,7 +343,13 @@ def edit(item_id):
         item.itemName = request.form.get("itemName")
         item.description = request.form.get("description")
         item.category = request.form.get("category")
-        item.condition = request.form.get("condition")
+        # FIX FOR CONDITION FIELD
+        condition = request.form.get("condition")
+        if not condition:
+            condition = item.condition  # keep the existing value instead of saving NULL
+        item.condition = condition
+
+        
         price = request.form.get("price")
         image_url = request.form.get("imageUrl", "").strip()
 
