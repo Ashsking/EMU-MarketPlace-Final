@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="page-title">Student Marketplace</h2>
+
+<!-- FILTER BAR -->
+<form method="get" class="filter-bar">
+  <label>
+    Category:
+    <select name="category" onchange="this.form.submit()">
+      <option value="all">All</option>
+      <option value="textbooks" {% if category_filter=='textbooks' %}selected{% endif %}>Textbooks</option>
+      <option value="clothing" {% if category_filter=='clothing' %}selected{% endif %}>Clothing</option>
+      <option value="dorm" {% if category_filter=='dorm' %}selected{% endif %}>Dorm</option>
+      <option value="other" {% if category_filter=='other' %}selected{% endif %}>Other</option>
+    </select>
+  </label>
+
+  <label>
+    Search:
+    <input type="search" name="search" value="{{ search_query }}" placeholder="Search items...">
+  </label>
+</form>
+
+<!-- EMPTY STATE -->
+{% if listings|length == 0 %}
+  <div class="empty-state">
+    <p>No items found.</p>
+    <p><a href="{{ url_for('marketplace') }}">Clear filters</a></p>
+  </div>
+
+{% else %}
+
+<!-- GRID -->
+<div class="product-grid">
+  {% for item in listings %}
+  <article class="product-card">
+
+    <!-- IMAGE -->
+    {% if item.image %}
+      {% if item.image.startswith("http") %}
+        <img src="{{ item.image }}">
+      {% else %}
+        <img src="{{ url_for('static', filename=item.image) }}">
+      {% endif %}
+    {% else %}
+      <img src="https://via.placeholder.com/400x250?text=No+Image">
+    {% endif %}
+
+    <div class="product-card-body">
+      <span class="badge">{{ item.category }}</span>
+      <span class="badge">{{ item.condition }}</span>
+
+      <h3>{{ item.itemName }}</h3>
+      <p class="price-tag">${{ '%.2f'|format(item.price) }}</p>
+      <p>{{ item.description }}</p>
+
+      <p><small>Seller: {{ item.seller.username }}</small></p>
+
+      {% if current_user %}
+        {% if current_user.id != item.seller_id %}
+        <form action="{{ url_for('buy_student', listing_id=item.id) }}" method="post">
+          <button type="submit">Buy Now</button>
+        </form>
+        
+        {% else %}
+          <small><em>Your listing</em></small>
+        {% endif %}
+      {% else %}
+        <p><a href="{{ url_for('login') }}">Login to contact seller</a></p>
+      {% endif %}
+    </div>
+
+  </article>
+  {% endfor %}
+</div>
+
+{% endif %}
+
+{% endblock %}

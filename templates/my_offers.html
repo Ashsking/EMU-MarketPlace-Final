@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>My Offers</h2>
+
+<!-- OFFERS SENT -->
+<h3>Offers I've Sent</h3>
+{% if sent_offers %}
+  <div class="offer-grid">
+    {% for offer in sent_offers %}
+      <article class="offer-card">
+
+        <div class="offer-card-header">
+          <div>
+            <h4>{{ offer.listing.itemName }}</h4>
+            <span class="status-badge status-{{ offer.status }}">{{ offer.status }}</span>
+          </div>
+
+          {% if offer.listing.image %}
+            {% if offer.listing.image.startswith("http") %}
+              <img src="{{ offer.listing.image }}" alt="{{ offer.listing.itemName }}" class="offer-thumb">
+            {% else %}
+              <img src="{{ url_for('static', filename=offer.listing.image) }}" alt="{{ offer.listing.itemName }}" class="offer-thumb">
+            {% endif %}
+          {% endif %}
+        </div>
+
+        <p>
+          <strong>Your Offer:</strong>
+          ${{ '%.2f'|format(offer.offer_price) }}
+          <small>(Asking: ${{ '%.2f'|format(offer.listing.price) }})</small>
+        </p>
+
+        <p>
+          <strong>Seller:</strong> {{ offer.seller.username }}
+          {% if offer.status == 'accepted' %}
+            (<a href="mailto:{{ offer.seller.email }}">{{ offer.seller.email }}</a>)
+          {% endif %}
+        </p>
+
+        {% if offer.message %}
+          <p class="message-box">
+            <em>"{{ offer.message }}"</em>
+          </p>
+        {% endif %}
+
+        <p><small>Sent: {{ offer.created_at.strftime("%B %d, %Y at %I:%M %p") }}</small></p>
+
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <p>You haven't made any offers yet.</p>
+    <p><a href="{{ url_for('index') }}">Browse marketplace</a> to find items you'd like to buy!</p>
+  </div>
+{% endif %}
+
+<hr>
+
+<!-- OFFERS RECEIVED -->
+<h3>Offers I've Received</h3>
+{% if received_offers %}
+  <div class="offer-grid">
+    {% for offer in received_offers %}
+      <article class="offer-card">
+
+        <div class="offer-card-header">
+          <div>
+            <h4>{{ offer.listing.itemName }}</h4>
+            <span class="status-badge status-{{ offer.status }}">{{ offer.status }}</span>
+          </div>
+
+          {% if offer.listing.image %}
+            {% if offer.listing.image.startswith("http") %}
+              <img src="{{ offer.listing.image }}" alt="{{ offer.listing.itemName }}" class="offer-thumb">
+            {% else %}
+              <img src="{{ url_for('static', filename=offer.listing.image) }}" alt="{{ offer.listing.itemName }}" class="offer-thumb">
+            {% endif %}
+          {% endif %}
+        </div>
+
+        <p>
+          <strong>Buyer's Offer:</strong>
+          ${{ '%.2f'|format(offer.offer_price) }}
+          <small>(Your asking: ${{ '%.2f'|format(offer.listing.price) }})</small>
+        </p>
+
+        <p>
+          <strong>Buyer:</strong> {{ offer.buyer.username }}
+          (<a href="mailto:{{ offer.buyer.email }}">{{ offer.buyer.email }}</a>)
+        </p>
+
+        {% if offer.message %}
+          <p class="message-box">
+            <em>"{{ offer.message }}"</em>
+          </p>
+        {% endif %}
+
+        {% if offer.status == 'pending' %}
+        <div class="button-group">
+          <a href="{{ url_for('respond_offer', offer_id=offer.id, action='accept') }}" role="button">
+            ✅ Accept Offer
+          </a>
+          <a href="{{ url_for('respond_offer', offer_id=offer.id, action='reject') }}" role="button" class="secondary">
+            ❌ Reject
+          </a>
+        </div>
+        {% endif %}
+
+        <p><small>Received: {{ offer.created_at.strftime("%B %d, %Y at %I:%M %p") }}</small></p>
+
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <p>You haven't received any offers yet.</p>
+    <p>Keep your listings active and buyers will start making offers!</p>
+  </div>
+{% endif %}
+
+{% endblock %}

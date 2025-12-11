@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="purchase-wrapper">
+  <h2>Buy Item</h2>
+
+  {% if error %}
+    <div class="error-box">{{ error }}</div>
+  {% endif %}
+
+  <div class="purchase-card">
+
+    <div class="purchase-left">
+      {% if listing.image %}
+        {% if listing.image.startswith("http") %}
+          <img class="purchase-img" src="{{ listing.image }}">
+        {% else %}
+          <img class="purchase-img" src="{{ url_for('static', filename=listing.image) }}">
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="purchase-right">
+      <h3>{{ listing.itemName }}</h3>
+      <p class="price-tag">${{ '%.2f'|format(listing.price) }}</p>
+      <p>{{ listing.description }}</p>
+
+      <form method="post">
+        <label>
+          Quantity
+          <input type="number" name="quantity" value="1" min="1" max="{{ listing.stock_quantity }}">
+        </label>
+
+        <button type="submit" class="contrast" style="width:100%; margin-top:1rem;">
+          Confirm Purchase
+        </button>
+      </form>
+
+      <p class="stock-note">Available: {{ listing.stock_quantity }}</p>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

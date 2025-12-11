@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="auth-wrapper">
+
+  <h2>Create Your EMU Marketplace Account</h2>
+
+  {% if error %}
+    <div class="error-box">{{ error }}</div>
+  {% endif %}
+
+  <form method="post">
+
+    <label>
+      Username
+      <input type="text" name="username" placeholder="Choose a username" required>
+    </label>
+
+    <label>
+      Email
+      <input type="email" name="email" placeholder="you@emu.edu" required>
+    </label>
+
+    <label>
+      Password
+      <input type="password" name="password" placeholder="Create a password" required>
+    </label>
+
+    <button type="submit" class="contrast" style="width: 100%; margin-top: 1rem;">
+      Sign Up
+    </button>
+  </form>
+
+  <p class="text-center" style="margin-top: 1rem;">
+    Already have an account?
+    <a href="{{ url_for('login') }}">Log in</a>
+  </p>
+
+</div>
+
+{% endblock %}

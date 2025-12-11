@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="confirm-wrapper">
+  <h2>Order Placed Successfully!</h2>
+
+  <div class="confirm-card">
+    <div class="confirm-left">
+      {% if listing.image %}
+        {% if listing.image.startswith("http") %}
+          <img class="confirm-img" src="{{ listing.image }}">
+        {% else %}
+          <img class="confirm-img" src="{{ url_for('static', filename=listing.image) }}">
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="confirm-right">
+      <h3>{{ listing.itemName }}</h3>
+
+      <p><strong>Quantity:</strong> {{ quantity }}</p>
+      <p><strong>Total Paid:</strong> ${{ '%.2f'|format(total) }}</p>
+
+      <a href="{{ url_for('my_orders') }}" class="btn-small" style="margin-top:1rem;">
+        View My Orders
+      </a>
+
+      <a href="{{ url_for('store') }}" class="btn-small btn-secondary" style="margin-top:0.5rem;">
+        Continue Shopping
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

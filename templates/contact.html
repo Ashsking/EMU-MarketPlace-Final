@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="max-width: 700px; margin-top: 2rem;">
+  <h2>Contact Us</h2>
+  <p>Have questions or need assistance? We're here to help.</p>
+
+  <ul>
+    <li><strong>Email:</strong> marketplace@emu.edu</li>
+    <li><strong>Phone:</strong> (540) 432-1200</li>
+    <li><strong>Location:</strong> Eastern Mennonite University, Harrisonburg, VA</li>
+  </ul>
+
+  <form method="post">
+    <label>
+      Your Email
+      <input type="email" name="email" required>
+    </label>
+
+    <label>
+      Message
+      <textarea name="message" rows="5" required></textarea>
+    </label>
+
+    <button class="contrast" type="submit">Send Message</button>
+  </form>
+</div>
+{% endblock %}

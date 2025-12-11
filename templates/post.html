@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-wrapper">
+  <h2>Post New Item</h2>
+
+  {% if error %}
+    <div class="error-box">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+
+    <!-- ITEM NAME -->
+    <label>
+      Item Name
+      <input type="text" name="itemName" required>
+    </label>
+  
+    <!-- DESCRIPTION -->
+    <label>
+      Description
+      <textarea name="description" rows="4" required></textarea>
+    </label>
+  
+    <!-- CATEGORY -->
+    <label>
+      Category
+      <select name="category" required>
+        <option value="textbooks">Textbooks</option>
+        <option value="clothing">Clothing</option>
+        <option value="dorm">Dorm</option>
+        <option value="other">Other</option>
+      </select>
+    </label>
+  
+    <!-- CONDITION -->
+    <label>
+      Condition
+      <select name="condition" required>
+        <option value="new">New</option>
+        <option value="good">Good</option>
+        <option value="fair">Fair</option>
+        <option value="used">Used</option>
+      </select>
+    </label>
+  
+    <!-- PRICE -->
+    <label>
+      Price
+      <input type="number" name="price" step="1" min="1" value="1" required>
+    </label>
+  
+    <!-- IMAGE OPTIONS -->
+    <fieldset>
+      <legend>Image</legend>
+  
+      <label>
+        Image URL
+        <input type="url" name="imageUrl" placeholder="https://example.com/image.jpg">
+      </label>
+  
+      <label>
+        Or Upload File
+        <input type="file" name="imageFile" accept="image/*">
+      </label>
+    </fieldset>
+  
+    <button type="submit" class="contrast" style="width: 100%; margin-top: 1rem;">
+      Post Item
+    </button>
+  
+  </form>
+  
+</div>
+
+{% endblock %}

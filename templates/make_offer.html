@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="offer-wrapper">
+  <h2>Make an Offer</h2>
+
+  {% if error %}
+    <div class="error-box">{{ error }}</div>
+  {% endif %}
+
+  <!-- LISTING PREVIEW -->
+  <div class="offer-preview">
+    {% if listing.image %}
+      {% if listing.image.startswith("http") %}
+        <img src="{{ listing.image }}" alt="{{ listing.itemName }}">
+      {% else %}
+        <img src="{{ url_for('static', filename=listing.image) }}" alt="{{ listing.itemName }}">
+      {% endif %}
+    {% endif %}
+
+    <h3 class="offer-title">{{ listing.itemName }}</h3>
+
+    <div class="offer-details">
+      <p class="price-tag">Asking Price: ${{ '%.2f'|format(listing.price) }}</p>
+      <p><strong>Seller:</strong> {{ listing.seller.username }}</p>
+      <p>{{ listing.description }}</p>
+    </div>
+  </div>
+
+  <!-- OFFER FORM -->
+  <form method="post">
+
+    <label>
+      Offer Price
+      <input
+        type="number"
+        name="offer_price"
+        step="0.01"
+        min="0.01"
+        value="{{ listing.price }}"
+        required
+      >
+      <small>Enter the price you'd like to offer the seller</small>
+    </label>
+
+    <label>
+      Message to Seller (optional)
+      <textarea 
+        name="message" 
+        rows="4"
+        placeholder="Hi! I'm interested in this item. Would you consider this offer?"
+      ></textarea>
+    </label>
+
+    <div class="button-group">
+      <button type="submit" class="contrast">💰 Send Offer</button>
+      <a href="{{ url_for('marketplace') }}" class="secondary" role="button">Cancel</a>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

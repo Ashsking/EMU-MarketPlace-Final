@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Orders</h2>
+
+{% if orders|length == 0 %}
+  <p>No orders yet.</p>
+{% else %}
+  {% for order in orders %}
+    <p>{{ order.listing.itemName }} — ${{ order.total_price }}</p>
+  {% endfor %}
+{% endif %}
+
+{% endblock %}

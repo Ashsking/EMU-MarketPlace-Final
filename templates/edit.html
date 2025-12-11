@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-wrapper">
+  <h2>Edit Listing</h2>
+
+  {% if error %}
+    <div class="error-box">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+
+    <!-- ITEM NAME -->
+    <label>
+      Item Name
+      <input type="text" name="itemName" value="{{ item.itemName }}" required>
+    </label>
+
+    <!-- DESCRIPTION -->
+    <label>
+      Description
+      <textarea name="description" rows="4" required>{{ item.description }}</textarea>
+    </label>
+
+    <!-- CATEGORY -->
+    <label>
+      Category
+      <select name="category">
+        {% for c in ["textbooks", "clothing", "dorm", "other"] %}
+          <option value="{{ c }}" {% if item.category == c %}selected{% endif %}>
+            {{ c.capitalize() }}
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <!-- PRICE -->
+    <label>
+      Price
+      <input type="number" step="0.01" name="price" value="{{ item.price }}" required>
+    </label>
+
+    <!-- CURRENT IMAGE -->
+    {% if item.image %}
+    <div class="listing-preview">
+      <p><strong>Current Image:</strong></p>
+
+      {% if item.image.startswith("http") %}
+        <img src="{{ item.image }}" alt="Current Image">
+      {% else %}
+        <img src="{{ url_for('static', filename=item.image) }}" alt="Current Image">
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- IMAGE UPDATE OPTIONS -->
+    <fieldset>
+      <legend>Update Listing Image</legend>
+
+      <label>
+        New Image URL
+        <input type="url" name="imageUrl" placeholder="https://example.com/image.jpg">
+      </label>
+
+      <label>
+        Upload New Image File
+        <input type="file" name="imageFile" accept="image/*">
+      </label>
+    </fieldset>
+
+    <!-- SUBMIT BUTTON -->
+    <button type="submit" class="contrast" style="width: 100%; margin-top: 1rem;">
+      Save Changes
+    </button>
+
+  </form>
+</div>
+
+{% endblock %}

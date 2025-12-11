@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>My Listings</h2>
+
+{% if listings|length == 0 %}
+  <div class="empty-state">
+    <p>You haven't posted any items yet.</p>
+    <p><a href="{{ url_for('post') }}">Post your first item</a> to start selling!</p>
+  </div>
+{% else %}
+  <div class="product-grid mt-2">
+
+    {% for item in listings %}
+    <article class="product-card">
+
+      <!-- IMAGE -->
+      {% if item.image %}
+        {% if item.image.startswith("http") %}
+          <img src="{{ item.image }}" alt="{{ item.itemName }}">
+        {% else %}
+          <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.itemName }}">
+        {% endif %}
+      {% else %}
+        <img src="https://via.placeholder.com/400x250?text=No+Image" alt="No Image">
+      {% endif %}
+
+      <!-- CONTENT -->
+      <div class="product-card-body">
+
+        <span class="badge badge-{{ item.category }}">{{ item.category }}</span>
+        <span class="badge badge-{{ item.condition }}">{{ item.condition }}</span>
+
+        <h3>{{ item.itemName }}</h3>
+
+        <p class="price-tag">${{ '%.2f'|format(item.price) }}</p>
+
+        <p>{{ item.description }}</p>
+
+        <!-- ACTION BUTTONS -->
+        <footer class="button-group">
+          <a href="{{ url_for('edit', item_id=item.id) }}" role="button">Edit</a>
+          <a href="{{ url_for('delete', item_id=item.id) }}" role="button" class="secondary">Delete</a>
+        </footer>
+
+      </div>
+    </article>
+    {% endfor %}
+
+  </div>
+{% endif %}
+
+{% endblock %}

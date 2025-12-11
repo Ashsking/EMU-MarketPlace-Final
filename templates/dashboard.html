@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="dashboard-sidebar">
+    <div class="dashboard-profile">
+      <div class="avatar-circle">
+        {{ current_user.username[0]|upper }}
+      </div>
+      <div class="profile-text">
+        <div class="profile-name">{{ current_user.username }}</div>
+        <div class="profile-email">{{ current_user.email }}</div>
+      </div>
+    </div>
+
+    <nav class="dashboard-nav">
+      <a href="{{ url_for('dashboard', tab='listings') }}"
+         class="{% if tab == 'listings' %}active{% endif %}">
+        🧺 My Listings
+      </a>
+      <a href="{{ url_for('dashboard', tab='offers') }}"
+         class="{% if tab == 'offers' %}active{% endif %}">
+        💬 My Offers
+      </a>
+      <a href="{{ url_for('dashboard', tab='orders') }}"
+         class="{% if tab == 'orders' %}active{% endif %}">
+        🧾 My Orders
+      </a>
+      <a href="{{ url_for('post') }}">
+        ➕ Post New Item
+      </a>
+      <a href="{{ url_for('logout') }}">
+        🚪 Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- MAIN PANEL -->
+  <section class="dashboard-main">
+
+    {# ========== MY LISTINGS ========== #}
+    {% if tab == 'listings' %}
+      <header class="dashboard-main-header">
+        <h2>My Listings</h2>
+        <a href="{{ url_for('post') }}" class="button primary">+ New Listing</a>
+      </header>
+
+      {% if listings|length == 0 %}
+        <div class="empty-state">
+          <p>You haven't posted any items yet.</p>
+          <p><a href="{{ url_for('post') }}">Create your first listing</a>.</p>
+        </div>
+      {% else %}
+        <div class="product-grid">
+          {% for item in listings %}
+          <article class="market-card">
+            {% if item.image %}
+              {% if item.image.startswith("http") %}
+                <img src="{{ item.image }}" alt="{{ item.itemName }}">
+              {% else %}
+                <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.itemName }}">
+              {% endif %}
+            {% endif %}
+            <div class="market-card-body">
+              <span class="badge">{{ item.category }}</span>
+              <h3>{{ item.itemName }}</h3>
+              <p class="price-tag">${{ '%.2f'|format(item.price) }}</p>
+              <p>{{ item.description }}</p>
+              <p><small>Posted: {{ item.datePosted.strftime("%Y-%m-%d") }}</small></p>
+
+              <div class="button-group">
+                <a href="{{ url_for('edit', item_id=item.id) }}" class="secondary" role="button">Edit</a>
+                <a href="{{ url_for('delete', item_id=item.id) }}" class="danger" role="button">Delete</a>
+              </div>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    {# ========== MY OFFERS ========== #}
+    {% elif tab == 'offers' %}
+
+      <header class="dashboard-main-header">
+        <h2>My Offers</h2>
+      </header>
+
+      <h3 class="subheading">Offers I've Sent</h3>
+      {% if sent_offers %}
+        <div class="offer-grid">
+          {% for offer in sent_offers %}
+          <article class="card">
+            <div class="offer-header">
+              <div>
+                <h4>{{ offer.listing.itemName }}</h4>
+                <span class="status-badge status-{{ offer.status }}">{{ offer.status }}</span>
+              </div>
+              {% if offer.listing.image %}
+                {% if offer.listing.image.startswith("http") %}
+                  <img src="{{ offer.listing.image }}" alt="{{ offer.listing.itemName }}">
+                {% else %}
+                  <img src="{{ url_for('static', filename=offer.listing.image) }}" alt="{{ offer.listing.itemName }}">
+                {% endif %}
+              {% endif %}
+            </div>
+
+            <p><strong>Your Offer:</strong> ${{ '%.2f'|format(offer.offer_price) }}
+               <small>(Asking: ${{ '%.2f'|format(offer.listing.price) }})</small>
+            </p>
+            <p><strong>Seller:</strong> {{ offer.seller.username }}</p>
+
+            {% if offer.message %}
+            <p class="offer-message">
+              “{{ offer.message }}”
+            </p>
+            {% endif %}
+
+            <p><small>Sent: {{ offer.created_at.strftime("%b %d, %Y • %I:%M %p") }}</small></p>
+          </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <p>No offers sent yet.</p>
+          <p><a href="{{ url_for('marketplace') }}">Browse the marketplace</a> to make an offer.</p>
+        </div>
+      {% endif %}
+
+      <hr class="section-divider">
+
+      <h3 class="subheading">Offers I've Received</h3>
+      {% if received_offers %}
+        <div class="offer-grid">
+          {% for offer in received_offers %}
+          <article class="card">
+            <div class="offer-header">
+              <div>
+                <h4>{{ offer.listing.itemName }}</h4>
+                <span class="status-badge status-{{ offer.status }}">{{ offer.status }}</span>
+              </div>
+              {% if offer.listing.image %}
+                {% if offer.listing.image.startswith("http") %}
+                  <img src="{{ offer.listing.image }}" alt="{{ offer.listing.itemName }}">
+                {% else %}
+                  <img src="{{ url_for('static', filename=offer.listing.image) }}" alt="{{ offer.listing.itemName }}">
+                {% endif %}
+              {% endif %}
+            </div>
+
+            <p><strong>Buyer's Offer:</strong> ${{ '%.2f'|format(offer.offer_price) }}
+               <small>(Your price: ${{ '%.2f'|format(offer.listing.price) }})</small>
+            </p>
+            <p><strong>Buyer:</strong> {{ offer.buyer.username }}
+               (<a href="mailto:{{ offer.buyer.email }}">{{ offer.buyer.email }}</a>)
+            </p>
+
+            {% if offer.message %}
+            <p class="offer-message">
+              “{{ offer.message }}”
+            </p>
+            {% endif %}
+
+            {% if offer.status == 'pending' %}
+            <div class="button-group">
+              <a href="{{ url_for('respond_offer', offer_id=offer.id, action='accept') }}"
+                 class="button primary" role="button">✅ Accept</a>
+              <a href="{{ url_for('respond_offer', offer_id=offer.id, action='reject') }}"
+                 class="secondary" role="button">❌ Reject</a>
+            </div>
+            {% endif %}
+
+            <p><small>Received: {{ offer.created_at.strftime("%b %d, %Y • %I:%M %p") }}</small></p>
+          </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <p>No one has made offers on your listings yet.</p>
+          <p>Try posting more items or adjusting prices.</p>
+        </div>
+      {% endif %}
+
+    {# ========== MY ORDERS (BUY NOW) ========== #}
+    {% elif tab == 'orders' %}
+
+      <header class="dashboard-main-header">
+        <h2>My Orders</h2>
+      </header>
+
+      {% if orders|length == 0 %}
+        <div class="empty-state">
+          <p>You haven’t placed any store orders yet.</p>
+          <p><a href="{{ url_for('store') }}">Visit the EMU Store</a> to try Buy Now.</p>
+        </div>
+      {% else %}
+        <div class="orders-grid">
+          {% for order in orders %}
+          <article class="card">
+            <div class="order-header">
+              <div>
+                <h4>{{ order.listing.itemName }}</h4>
+                <span class="status-badge status-{{ order.status }}">
+                  {{ order.status|capitalize }}
+                </span>
+              </div>
+              {% if order.listing.image %}
+                {% if order.listing.image.startswith("http") %}
+                  <img src="{{ order.listing.image }}" alt="{{ order.listing.itemName }}">
+                {% else %}
+                  <img src="{{ url_for('static', filename=order.listing.image) }}" alt="{{ order.listing.itemName }}">
+                {% endif %}
+              {% endif %}
+            </div>
+
+            <p><strong>Quantity:</strong> {{ order.quantity }}</p>
+            <p><strong>Total:</strong> ${{ '%.2f'|format(order.total_price) }}</p>
+            <p><small>Placed on {{ order.created_at.strftime("%b %d, %Y • %I:%M %p") }}</small></p>
+          </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    {% endif %}
+
+  </section>
+</div>
+
+{% endblock %}
